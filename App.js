@@ -13,10 +13,15 @@ import CarSelectView from './views/CarSelectView'
 import TripStartView from './views/TripStartView';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 
+
 const MainNavigator = createStackNavigator({
   CarSelectView: {screen: CarSelectView},
-  ripStartView: {screen: TripStartView},
+  TripStartView: {screen: TripStartView},
   OdometerInputView: {screen: OdometerInputView}
+},{
+  defaultNavigationOptions: {
+    header: null  
+  }, 
 });
 
 const App = createAppContainer(MainNavigator);

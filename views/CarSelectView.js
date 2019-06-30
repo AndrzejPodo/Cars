@@ -2,11 +2,22 @@ import React, {Component} from 'react';
 import {Dimensions, StyleSheet, Text, View, ScrollView} from 'react-native';
 import MyLabel from '../mycomponents/MyLabel';
 import CarSelectionButton from '../mycomponents/CarSelectionButton'
+import {AsyncStorage} from 'react-native';
 
 export default class CarSelectView extends Component{
+    componentWillMount(){
+        AsyncStorage.getItem('onTrip').then((data)=>{
+            console.log(JSON.parse(data).bool)
+            if(JSON.parse(data).bool == true){
+                console.log("halo");
+                this.props.navigation.navigate('OdometerInputView', {'carName':JSON.parse(data).whichCar});
+            }
+        })
+    }
     //this onPress handler will navigate to apropriate screen cennected to the choosen car
     onPress = (object)=>{
         alert(object.carName);
+        this.props.navigation.navigate('TripStartView',{'carName':object.carName});
     }
     state = {
         //this table will be some list of objects downloaded from serwer or from local storage
