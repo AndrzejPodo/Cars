@@ -7,7 +7,7 @@ import {AsyncStorage} from 'react-native';
 
 export default class TripStartView extends Component{
     state = {
-        odometerState: 0
+        odometerState: 0,
     }
 
     getOdometerState = ()=>{
@@ -21,16 +21,16 @@ export default class TripStartView extends Component{
         console.log(text)
         this.setState({ odometerState: parseInt(text) });
     }
-    saveData = async (bool, car)=>{
+    saveData = async ()=>{
         try{
-            await AsyncStorage.setItem('onTrip', JSON.stringify({'bool':bool,'whichCar' : car}));
+            await AsyncStorage.setItem(this.props.navigation.state.params.userId+'', JSON.stringify({'bool':true,'whichCar' : this.props.navigation.state.params.carName}));
         }catch(error){
             console.log(error)
         }
     }
     onPress = ()=>{
-        this.saveData(true, this.props.navigation.state.params.carName);
-        this.props.navigation.navigate('OdometerInputView',{'carName':this.props.navigation.state.params.carName});
+        this.saveData();
+        this.props.navigation.navigate('OdometerInputView',{'userId':this.props.navigation.state.params.userId,'carName':this.props.navigation.state.params.carName});
     }
     render(){
         return(

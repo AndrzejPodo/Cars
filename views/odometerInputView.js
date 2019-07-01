@@ -7,14 +7,14 @@ import {AsyncStorage} from 'react-native';
 
 export default class OdometerInputView extends Component {
     state = {
-        odometerState: '0'
+        odometerState: '0',
     }
     onChangeText = (text)=>{
         this.setState({ odometerState: text });
     }
 
     unlockTrip = ()=>{
-            AsyncStorage.setItem("onTrip",JSON.stringify({'bool':false,'whichCar':'none'})).catch((err)=>{
+            AsyncStorage.setItem(this.props.navigation.state.params.userId+'',JSON.stringify({'bool':false,'whichCar':'none'})).catch((err)=>{
                 console.log(err);
             })
     
@@ -31,6 +31,12 @@ export default class OdometerInputView extends Component {
         }
     }
 
+    onForgotPress = ()=>{
+        //sending blank data to server
+        this.unlockTrip();
+        this.props.navigation.navigate('CarSelectView');
+    }
+
     render() {
         return (
             <View style = {styles.background}>
@@ -38,6 +44,7 @@ export default class OdometerInputView extends Component {
                     <MyLabel width={0.7*Dimensions.get('window').width} text = {this.props.navigation.state.params.carName}></MyLabel>
                     <InputFiled minWidth = {0.7*Dimensions.get('window').width} onChangeText={this.onChangeText} text="Odometer state..."></InputFiled>
                     <MyButton color="white" width = {0.7*Dimensions.get('window').width} onPress={this.onPress} text="ENTER"></MyButton>
+                    <MyButton color="white" width = {0.7*Dimensions.get('window').width} onPress={this.onForgotPress} text="I Forgot"></MyButton>
                 </View>
             </View>
         );

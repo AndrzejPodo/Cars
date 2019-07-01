@@ -1,23 +1,38 @@
 import React, {Component} from 'react';
 import {Dimensions, StyleSheet, Text, View, ScrollView} from 'react-native';
 import MyLabel from '../mycomponents/MyLabel';
+import MyButton from '../mycomponents/myButton';
 import CarSelectionButton from '../mycomponents/CarSelectionButton'
 import {AsyncStorage} from 'react-native';
 
 export default class CarSelectView extends Component{
     componentWillMount(){
-        AsyncStorage.getItem('onTrip').then((data)=>{
-            console.log(JSON.parse(data).bool)
+        AsyncStorage.getItem(this.props.navigation.state.userId+'').then((data)=>{
             if(JSON.parse(data).bool == true){
-                console.log("halo");
-                this.props.navigation.navigate('OdometerInputView', {'carName':JSON.parse(data).whichCar});
+                this.props.navigation.navigate('OdometerInputView', {'userId':this.props.navigation.state.userId,'carName':JSON.parse(data).whichCar});
             }
         })
     }
     //this onPress handler will navigate to apropriate screen cennected to the choosen car
     onPress = (object)=>{
-        alert(object.carName);
-        this.props.navigation.navigate('TripStartView',{'carName':object.carName});
+        this.props.navigation.navigate('TripStartView',{'userId':this.props.navigation.state.userId,'carName':object.carName});
+    }
+    deleteLoginData = async()=>{
+        try{
+            await AsyncStorage.setItem('login',JSON.stringify({
+                isLogged:false,
+                userId: null,
+                userName: null,
+                token: null,
+                loginDate: null
+            }));
+        }catch(err){
+            console.log(err)
+        }
+    }
+    onLogoutPress = ()=>{
+        this.deleteLoginData();
+        this.props.navigation.navigate('LoginView');
     }
     state = {
         //this table will be some list of objects downloaded from serwer or from local storage
@@ -50,6 +65,7 @@ export default class CarSelectView extends Component{
                             }
                         </ScrollView>
                     </View>
+                    <MyButton color="white" width = {0.7*Dimensions.get('window').width} onPress={this.onLogoutPress} text="Logout"></MyButton>
                 </View>
             </View>
         );

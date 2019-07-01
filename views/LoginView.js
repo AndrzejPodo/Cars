@@ -15,9 +15,8 @@ export default class LoginView extends Component{
     }
     componentWillMount(){
         AsyncStorage.getItem('login').then((data)=>{
-            alert(data)
             if(JSON.parse(data).isLogged == true){
-                this.props.navigation.navigate('CarSelectView');
+                this.props.navigation.navigate('CarSelectView', {'userId':userId});
             }
         })
     }
