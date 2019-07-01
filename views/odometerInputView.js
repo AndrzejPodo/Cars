@@ -41,7 +41,7 @@ export default class OdometerInputView extends Component {
                 </View>
             </View>
         );
-  }
+    }
 }
 
 const styles = StyleSheet.create({

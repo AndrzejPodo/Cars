@@ -8,16 +8,20 @@
 
 import React, {Component} from 'react';
 import {Dimensions, Platform, StyleSheet, Button, View} from 'react-native';
-import OdometerInputView from './views/odometerInputView'
-import CarSelectView from './views/CarSelectView'
+import OdometerInputView from './views/odometerInputView';
+import CarSelectView from './views/CarSelectView';
 import TripStartView from './views/TripStartView';
+import LoginView from './views/LoginView';
+import RegisterView from './views/RegisterView';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 
 
 const MainNavigator = createStackNavigator({
+  LoginView: {screen: LoginView},
   CarSelectView: {screen: CarSelectView},
   TripStartView: {screen: TripStartView},
-  OdometerInputView: {screen: OdometerInputView}
+  OdometerInputView: {screen: OdometerInputView},
+  RegisterView: {screen: RegisterView}
 },{
   defaultNavigationOptions: {
     header: null  
