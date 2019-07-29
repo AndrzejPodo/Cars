@@ -5,7 +5,7 @@ export default class InputFiled extends Component {
     render(){
         return(
             <View minWidth = {this.props.minWidth} style = {styles.container}>
-                <TextInput style = {styles.text} placeholder = {this.props.text} onChangeText = {this.props.onChangeText}></TextInput>
+                <TextInput autoCapitalize={this.props.autoCapitalize}  autoCompleteType = {this.props.autoCompleteType} secureTextEntry={this.props.secureTextEntry} style = {styles.text} placeholder = {this.props.text} onChangeText = {this.props.onChangeText}></TextInput>
             </View>
         );
     }

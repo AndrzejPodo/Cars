@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native'
-
 //MyButton is generic class that facilitate creating custom buttons with stylign that matches my application
 export default class MyButton extends Component{
     render(){

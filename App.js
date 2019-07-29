@@ -13,6 +13,8 @@ import CarSelectView from './views/CarSelectView';
 import TripStartView from './views/TripStartView';
 import LoginView from './views/LoginView';
 import RegisterView from './views/RegisterView';
+import GroupManagementView from './views/GroupManagementView';
+import UserManagementView from './views/UserManagementView'
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 
 
@@ -21,7 +23,9 @@ const MainNavigator = createStackNavigator({
   CarSelectView: {screen: CarSelectView},
   TripStartView: {screen: TripStartView},
   OdometerInputView: {screen: OdometerInputView},
-  RegisterView: {screen: RegisterView}
+  RegisterView: {screen: RegisterView},
+  GroupManagementView: {screen: GroupManagementView},
+  UserManagementView: {screen: UserManagementView}
 },{
   defaultNavigationOptions: {
     header: null  

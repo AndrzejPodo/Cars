@@ -3,20 +3,27 @@ import {Dimensions, StyleSheet, View} from 'react-native';
 import InputFiled from '../mycomponents/InputFiled'
 import MyButton from '../mycomponents/myButton';
 import {AsyncStorage} from 'react-native';
+import Config from '../network.config'
+
 
 const userId = 324; //userId will be fetched form database
-const token="wdawe14wrqr34232321e2112eqwdq"; //token will be optained form authentication server
+// const token="wdawe14wrqr34232321e2112eqwdq"; //token will be optained form authentication server
 
 
 export default class LoginView extends Component{
     state = {
-        login: "",
-        password: ""
+        email: "",
+        password: "",
+        token:"1321431525452"
     }
     componentWillMount(){
         AsyncStorage.getItem('login').then((data)=>{
             if(JSON.parse(data).isLogged == true){
-                this.props.navigation.navigate('CarSelectView', {'userId':userId});
+                if(JSON.parse(data).role == "USER")
+                    this.props.navigation.navigate('CarSelectView', {'userId':userId});
+                else if (JSON.parse(data).role == "ADMIN"){
+                    this.props.navigation.navigate('GroupManagementView', {'userId':userId});
+                }
             }
         })
     }
@@ -33,23 +40,56 @@ export default class LoginView extends Component{
                 date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec,
         });
     }
-    saveLoginData = async ()=>{
+    saveLoginData = async (role)=>{
         try{
             await AsyncStorage.setItem('login',JSON.stringify({
                 isLogged:true,
+                role: role,
                 userId: userId,
                 userName: this.state.login,
-                token: token,
+                token: this.state.token,
                 loginDate: this.getDate()
             }));
         }catch(err){
             console.log(err)
         }
     }
+
+
     loginOnPress = ()=>{
+        //TODO: send request for authenticaiton
+        return fetch(Config.SERVER_URL+'/user/login', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                password: this.state.password,
+                email: this.state.email,
+            })
+        }).then((res)=>{
+            if(res.status == 401){
+                throw new Error("Authentication failed! \n" + "email: "+this.state.email + "\npassword: "+this.state.password)
+            }else{
+               return res.json();
+            }
+        }).then((resJson)=>{
+            this.saveLoginData(resJson.token,"USER");
+            this.props.navigation.navigate('CarSelectView');
+        }).catch(err=>alert(err.toString()));
         alert("login: "+this.state.login + "\n" + "password: "+this.state.password);
-        this.saveLoginData();
+        token= "dkwjabdkabwduab;odiba;oidibwa;oib"
+        this.saveLoginData(token, "USER");
         this.props.navigation.navigate('CarSelectView');
+    }
+
+
+    loginAsAdminOnPress = () => {
+        //TODO: send request for authentication
+        alert("login: "+this.state.login + "\n" + "password: "+this.state.password);
+        token= "dkwjabdkabwduab;odiba;oidibwa;oib"
+        this.saveLoginData(token, "ADMIN");
+        this.props.navigation.navigate('GroupManagementView');
     }
     registerOnPress = ()=>{
         this.props.navigation.navigate('RegisterView');
@@ -58,9 +98,10 @@ export default class LoginView extends Component{
         return (
             <View style = {styles.background}>
                 <View width={Dimensions.get('window').width - 30} style={styles.container}>
-                    <InputFiled minWidth = {0.7*Dimensions.get('window').width} onChangeText={(login)=>{this.setState({'login':login})}} text="Login"></InputFiled>
-                    <InputFiled minWidth = {0.7*Dimensions.get('window').width} onChangeText={(password)=>{this.setState({'password': password})}} text="Password"></InputFiled>
+                    <InputFiled autoCapitalize="none" autoCompleteType = "email" minWidth = {0.7*Dimensions.get('window').width} onChangeText={(email)=>{this.setState({'email':email})}} text="Email"></InputFiled>
+                    <InputFiled autoCapitalize="none" autoCompleteType = "off" secureTextEntry={true} minWidth = {0.7*Dimensions.get('window').width} onChangeText={(password)=>{this.setState({'password': password})}} text="Password"></InputFiled>
                     <MyButton color="white" width = {0.7*Dimensions.get('window').width} onPress={this.loginOnPress} text="Login"></MyButton>
+                    <MyButton color="white" width = {0.7*Dimensions.get('window').width} onPress={this.loginAsAdminOnPress} text="Login As Admin"></MyButton>
                     <MyButton color="white" width = {0.7*Dimensions.get('window').width} onPress={this.registerOnPress} text="Register"></MyButton>
                 </View>
             </View>
